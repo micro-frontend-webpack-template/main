@@ -1,6 +1,5 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import ErrorBoundary from "./ErrorBoundary";
 const LayoutAdminNavbar = React.lazy(() => import("Layout/AdminNavbar"));
 const LayoutHeaderStats = React.lazy(() => import("Layout/HeaderStats"));
 const LayoutAdminDashboard = React.lazy(() => import("Layout/AdminDashboard"));
@@ -11,56 +10,27 @@ const Sidebar = React.lazy(() => import("Sidebar/Index"));
 
 function App() {
   return (
-    <>
-      <ErrorBoundary>
-        <Sidebar />
-      </ErrorBoundary>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Sidebar />
 
       <div className="relative md:ml-64 bg-blueGray-100">
-        <ErrorBoundary>
-          <LayoutAdminNavbar />
-        </ErrorBoundary>
+        <LayoutAdminNavbar />
+
         {/* Header */}
-        <ErrorBoundary>
-          <LayoutHeaderStats />
-        </ErrorBoundary>
+
+        <LayoutHeaderStats />
+
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Routes>
-            <Route
-              path="/"
-              exact
-              element={
-                <ErrorBoundary>
-                  <LayoutAdminDashboard />
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="/settings"
-              exact
-              element={
-                <ErrorBoundary>
-                  <LayoutAdminSettings />
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="/tables"
-              exact
-              element={
-                <ErrorBoundary>
-                  <LayoutAdminTables />
-                </ErrorBoundary>
-              }
-            />
+            <Route path="/" exact element={<LayoutAdminDashboard />} />
+            <Route path="/settings" exact element={<LayoutAdminSettings />} />
+            <Route path="/tables" exact element={<LayoutAdminTables />} />
           </Routes>
 
-          <ErrorBoundary>
-            <LayoutFooterAdmin />
-          </ErrorBoundary>
+          <LayoutFooterAdmin />
         </div>
       </div>
-    </>
+    </Suspense>
   );
 }
 
